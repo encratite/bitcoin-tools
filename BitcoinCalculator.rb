@@ -41,7 +41,6 @@ class BitcoinCalculator
   end
 
   def profitPerDay
-    #<ape>   totals.btc_per_day = 50 * TimeSpan.FromDays(1).Seconds / (1 / (Math.Pow(2, 224) - 1)) / currentDifficulty * totals.total_hash_rate * 1000 / Math.Pow(2, 256);
     hoursPerDay = 24
     minutesPerHour = 60
     secondsPerMinute = 60
@@ -52,7 +51,7 @@ class BitcoinCalculator
       mtgoxKespaLoss = 0.03
       income *= @usdToEuroExchangeRange * (1 - mtgoxKespaLoss)
     end
-    expenses = @configuration::Wattage / 1000 * @configuration::PsuEfficiency * @configuration::ExpensesPerKWh
+    expenses = @configuration::Wattage / 1000.0 / @configuration::PsuEfficiency * @configuration::ExpensesPerKWh * hoursPerDay
     profit = income - expenses
     return truncateValue(profit)
   end
