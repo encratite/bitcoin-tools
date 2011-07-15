@@ -15,7 +15,7 @@ class BitcoinCalculator
   end
 
   def loadDynamicData
-    @difficulty, @btcToUSDExchangeRate = extractHTTPNumber('http://bitcoincharts.com/markets/', /<td class="label">Difficulty<\/td><td>(\d+)<\/td>.*?<a href=".*?">mtgoxUSD<\/a>.*?<span class="sub">USD \(Liberty Reserve\)<\/span>.*?<\/td>.*?<td>((?:\d|\.)+)/m)
+    @difficulty, @btcToUSDExchangeRate = extractHTTPNumber('http://bitcoincharts.com/markets/', /<td class="label">Difficulty<\/td><td>(\d+)<\/td>.*?mtgoxUSD.*?<td>(?:\d|\.)+<\/td>.*?<td>((?:\d|\.)+)<\/td>.*?<td>(?:\d|\.)+<\/td>.*?<td class="minichart">/m)
     if useEuro
       @usdToEuroExchangeRange = extractHTTPNumber('http://finance.yahoo.com/q?s=USDEUR=X', /<span id="yfs_l10_usdeur=x">((?:\d|\.)+)<\/span>/).first
     end
