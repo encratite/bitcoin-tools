@@ -1,9 +1,13 @@
 require 'nil/http'
 
 class BitcoinCalculator
+  attr_reader :difficulty, :btcToUSDExchangeRate, :usdToEuroExchangeRange
+  attr_reader :effectiveMillionsOfHashesPerSecond, :bitcoinsPerDay, :dailyIncome, :effectiveWattage, :energyConsumedDailyInKwh, :dailyExpenses, :dailyProfit, :powerExpensesRatio, :daysToBreakEven
+
   def initialize(configuration)
     @configuration = configuration
     loadDynamicData
+    performCalculations
   end
 
   def useEuro
@@ -40,30 +44,29 @@ class BitcoinCalculator
     end
   end
 
-  def profitPerDay
+  def performCalculations
     hoursPerDay = 24
     minutesPerHour = 60
     secondsPerMinute = 60
     secondsPerDay = hoursPerDay * minutesPerHour * secondsPerMinute
-    btcPerDay = 50 * secondsPerDay / (1.0 / (2 ** 224 - 1)) / @difficulty * @configuration::MillionsOfHashesPerSecond * 1000 ** 2 / (2 ** 256)
-    income = btcPerDay * @btcToUSDExchangeRate * (1 - @configuration::PoolFeeRatio)
+    @effectiveMillionsOfHashesPerSecond = @configuration::MillionsOfHashesPerSecond * (1 - @configuration::StaleRate)
+    @bitcoinsPerDay = 50 * secondsPerDay / (1.0 / (2 ** 224 - 1)) / @difficulty * @effectiveMillionsOfHashesPerSecond * 1000 ** 2 / (2 ** 256)
+    @dailyIncome = @bitcoinsPerDay * @btcToUSDExchangeRate * (1 - @configuration::PoolFeeRatio)
     if useEuro
-      mtgoxSEPALoss = 0.02
-      income *= @usdToEuroExchangeRange * (1 - mtgoxSEPALoss)
+      mtgoxSEPAFees = 0.02
+      @dailyIncome *= @usdToEuroExchangeRange * (1 - mtgoxSEPAFees)
     end
-    expenses = @configuration::Wattage / 1000.0 / @configuration::PsuEfficiency * @configuration::ExpensesPerKWh * hoursPerDay
-    profit = income - expenses
-    puts "#{expenses.to_f / income}"
-    return truncateValue(profit)
+    @effectiveWattage = @configuration::Wattage / @configuration::PsuEfficiency
+    @energyConsumedDailyInKwh = @effectiveWattage / 1000.0 * hoursPerDay
+    @dailyExpenses = @energyConsumedDailyInKwh * @configuration::ExpensesPerKWh
+    @dailyProfit = @dailyIncome - @dailyExpenses
+    @powerExpensesRatio = @dailyExpenses.to_f / @dailyIncome
+    @daysToBreakEven = (@configuration::HardwareExpenses / @dailyProfit).ceil
   end
 
   def truncateValue(input)
     precision = 2
     factor = 10 ** precision
     return (input * factor).truncate.to_f / factor
-  end
-
-  def profitPerMonth
-    return truncateValue(profitPerDay * 30.5)
   end
 end
