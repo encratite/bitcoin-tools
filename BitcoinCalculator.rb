@@ -2,7 +2,7 @@ require 'nil/http'
 
 class BitcoinCalculator
   attr_reader :difficulty, :btcToUSDExchangeRate, :usdToEuroExchangeRange
-  attr_reader :effectiveMillionsOfHashesPerSecond, :bitcoinsPerDay, :dailyIncome, :effectiveWattage, :energyConsumedDailyInKwh, :dailyExpenses, :dailyProfit, :powerExpensesRatio, :daysToBreakEven
+  attr_reader :effectiveMillionsOfHashesPerSecond, :bitcoinsPerDay, :dailyIncome, :effectiveWattage, :energyConsumedDailyInKWh, :dailyExpenses, :dailyProfit, :powerExpensesRatio, :daysToBreakEven
 
   def initialize(configuration)
     @configuration = configuration
@@ -57,8 +57,8 @@ class BitcoinCalculator
       @dailyIncome *= @usdToEuroExchangeRange * (1 - mtgoxSEPAFees)
     end
     @effectiveWattage = @configuration::Wattage / @configuration::PsuEfficiency
-    @energyConsumedDailyInKwh = @effectiveWattage / 1000.0 * hoursPerDay
-    @dailyExpenses = @energyConsumedDailyInKwh * @configuration::ExpensesPerKWh
+    @energyConsumedDailyInKWh = @effectiveWattage / 1000.0 * hoursPerDay
+    @dailyExpenses = @energyConsumedDailyInKWh * @configuration::ExpensesPerKWh
     @dailyProfit = @dailyIncome - @dailyExpenses
     @powerExpensesRatio = @dailyExpenses.to_f / @dailyIncome
     @daysToBreakEven = (@configuration::HardwareExpenses / @dailyProfit).ceil
