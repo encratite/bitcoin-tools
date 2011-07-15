@@ -16,7 +16,7 @@ if Configuration::Euro
   puts "USD to Euro exchange rate: #{calculator.usdToEuroExchangeRange} USD/EUR"
 end
 puts "Effective wattage: #{truncate(calculator.effectiveWattage)} W"
-puts "Energy consumed per day: #{truncate(calculator.energyConsumedDailyInKwh)} kW/h"
+puts "Energy consumed per day: #{truncate(calculator.energyConsumedDailyInKwh)} kWh"
 puts "Bitcoin income per day: #{truncate(calculator.bitcoinsPerDay)} BTC/day."
 puts "Income per day: #{truncate(calculator.dailyIncome)} #{Configuration::CurrencySymbol}."
 puts "Expenses per day: #{truncate(calculator.dailyExpenses)} #{Configuration::CurrencySymbol}."
