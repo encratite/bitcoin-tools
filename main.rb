@@ -11,9 +11,9 @@ puts "Hardware used: #{Configuration::HardwareDescription}."
 puts "Hardware expenses: #{truncate(Configuration::HardwareExpenses)} #{Configuration::CurrencySymbol}."
 puts "Hashing speed: #{Configuration::MillionsOfHashesPerSecond} Mhash/s."
 puts "Difficulty: #{calculator.difficulty}"
-puts "BTC to USD exchange rate: #{calculator.btcToUSDExchangeRate} BTC/USD"
+puts "BTC to USD exchange rate: #{calculator.btcToUSDExchangeRate} USD/BTC"
 if Configuration::Euro
-  puts "USD to Euro exchange rate: #{calculator.usdToEuroExchangeRange} USD/EUR"
+  puts "USD to Euro exchange rate: #{calculator.usdToEuroExchangeRange} EUR/USD"
 end
 puts "Effective wattage: #{truncate(calculator.effectiveWattage)} W"
 puts "Energy consumed per day: #{truncate(calculator.energyConsumedDailyInKWh)} kWh"
