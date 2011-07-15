@@ -48,11 +48,12 @@ class BitcoinCalculator
     btcPerDay = 50 * secondsPerDay / (1.0 / (2 ** 224 - 1)) / @difficulty * @configuration::MillionsOfHashesPerSecond * 1000 ** 2 / (2 ** 256)
     income = btcPerDay * @btcToUSDExchangeRate * (1 - @configuration::PoolFeeRatio)
     if useEuro
-      mtgoxKespaLoss = 0.03
-      income *= @usdToEuroExchangeRange * (1 - mtgoxKespaLoss)
+      mtgoxSEPALoss = 0.02
+      income *= @usdToEuroExchangeRange * (1 - mtgoxSEPALoss)
     end
     expenses = @configuration::Wattage / 1000.0 / @configuration::PsuEfficiency * @configuration::ExpensesPerKWh * hoursPerDay
     profit = income - expenses
+    puts "#{expenses.to_f / income}"
     return truncateValue(profit)
   end
 
